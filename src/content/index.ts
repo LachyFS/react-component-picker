@@ -2,11 +2,16 @@
 // Communicates with page-script.ts (MAIN world) via window.postMessage
 
 import type { PickerSettings, RCPResultMessage, RuntimeMessage } from "../shared/types";
-import { DEFAULT_SETTINGS, STORAGE_KEY } from "../shared/constants";
+import { DEFAULT_SETTINGS, LOCALHOST_HOSTS, STORAGE_KEY } from "../shared/constants";
 import { activate, deactivate, isActive, handleResult } from "./picker";
 
 let settings: PickerSettings = { ...DEFAULT_SETTINGS };
 let hotkeyPressed = false;
+
+function isAllowedSite(hostname: string, s: PickerSettings): boolean {
+  if ((LOCALHOST_HOSTS as readonly string[]).includes(hostname)) return true;
+  return s.allowedSites.includes(hostname);
+}
 
 // Load settings
 chrome.storage.sync.get(STORAGE_KEY, (result) => {
@@ -27,7 +32,7 @@ document.addEventListener("keydown", (e) => {
   if (hotkeyPressed) return;
   if (e.key === settings.hotkey) {
     hotkeyPressed = true;
-    if (!isActive()) {
+    if (!isActive() && isAllowedSite(location.hostname, settings)) {
       activate(settings);
     }
   }
@@ -54,8 +59,11 @@ window.addEventListener("blur", () => {
 chrome.runtime.onMessage.addListener((message: RuntimeMessage) => {
   if (message.type === "SETTINGS_UPDATED") {
     settings = message.settings;
-    // If active, restart with new settings
-    if (isActive()) {
+    // If active and site is no longer allowed, deactivate
+    if (isActive() && !isAllowedSite(location.hostname, settings)) {
+      deactivate();
+    } else if (isActive()) {
+      // Restart with new settings
       deactivate();
       activate(settings);
     }

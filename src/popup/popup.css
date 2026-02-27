@@ -25,6 +25,41 @@ h1 {
   border-bottom: 1px solid #333;
 }
 
+.site-toggle {
+  background: #0d0d1a;
+  border: 1px solid #333;
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin-bottom: 14px;
+}
+
+.site-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.site-hostname {
+  font-size: 11px;
+  color: #666;
+  margin-top: 4px;
+  word-break: break-all;
+}
+
+.site-toggle .toggle-label span {
+  color: #e0e0e0;
+  font-size: 13px;
+}
+
+.site-toggle.always-on {
+  border-color: #2a4a2a;
+  background: #0d1a0d;
+}
+
+.site-toggle.always-on .toggle-label span {
+  color: #6fbf6f;
+}
+
 .field {
   margin-bottom: 14px;
 }

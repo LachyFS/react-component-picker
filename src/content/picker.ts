@@ -6,6 +6,8 @@ const ACTIVE_CLASS = "__rcp-active";
 let active = false;
 let latestComponents: ComponentInfo[] = [];
 let latestRect: RCPResultMessage["rect"] = null;
+let latestContent: string | null = null;
+let latestProps: string | null = null;
 let rafId: number | null = null;
 let pendingQuery = false;
 let settings: PickerSettings;
@@ -52,7 +54,7 @@ export function activate(currentSettings: PickerSettings): void {
     e.stopImmediatePropagation();
 
     if (latestComponents.length > 0) {
-      const text = formatCopyText(latestComponents, settings);
+      const text = formatCopyText(latestComponents, settings, latestContent, latestProps);
       navigator.clipboard.writeText(text).then(() => {
         flashCopyFeedback();
         setTimeout(() => deactivate(), 250);
@@ -96,6 +98,8 @@ export function deactivate(): void {
 
   latestComponents = [];
   latestRect = null;
+  latestContent = null;
+  latestProps = null;
   pendingQuery = false;
 }
 
@@ -104,20 +108,27 @@ export function handleResult(msg: RCPResultMessage): void {
   pendingQuery = false;
   latestComponents = msg.components;
   latestRect = msg.rect;
-  updateOverlay(msg.rect, msg.components, settings.parentChainDepth);
+  latestContent = msg.content;
+  latestProps = msg.props;
+  updateOverlay(msg.rect, msg.components, settings.parentChainDepth, msg.props);
 }
 
-function formatCopyText(components: ComponentInfo[], settings: PickerSettings): string {
+function formatCopyText(components: ComponentInfo[], settings: PickerSettings, content: string | null, props: string | null): string {
   if (components.length === 0) return "";
 
   const primary = components[0];
   let text = formatComponent(primary);
+  if (props) text += ` ${props}`;
 
   if (settings.includeParentChain && components.length > 1) {
     const parents = components.slice(1, settings.parentChainDepth + 1);
     for (const parent of parents) {
       text += `\n  in ${formatComponent(parent)}`;
     }
+  }
+
+  if (content) {
+    text += `\n\n\`\`\`html\n${content}\n\`\`\``;
   }
 
   if (settings.includePageUrl) {

@@ -10,6 +10,7 @@ export interface PickerSettings {
   includeParentChain: boolean;
   includePageUrl: boolean;
   parentChainDepth: number;
+  allowedSites: string[];
 }
 
 // Messages between page-script (MAIN world) and content script (ISOLATED world)
@@ -23,6 +24,8 @@ export interface RCPResultMessage {
   type: "RCP_RESULT";
   components: ComponentInfo[];
   rect: { top: number; left: number; width: number; height: number } | null;
+  content: string | null;
+  props: string | null;
 }
 
 export type RCPPostMessage = RCPQueryMessage | RCPResultMessage;

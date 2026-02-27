@@ -12,7 +12,10 @@ export const DEFAULT_SETTINGS: PickerSettings = {
   includeParentChain: true,
   includePageUrl: false,
   parentChainDepth: 3,
+  allowedSites: [],
 };
+
+export const LOCALHOST_HOSTS = ["localhost", "127.0.0.1", "[::1]"] as const;
 
 // Internal React fiber property prefixes
 export const FIBER_PREFIXES = [

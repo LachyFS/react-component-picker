@@ -1,5 +1,5 @@
 import type { PickerSettings } from "../shared/types";
-import { DEFAULT_SETTINGS, STORAGE_KEY } from "../shared/constants";
+import { DEFAULT_SETTINGS, LOCALHOST_HOSTS, STORAGE_KEY } from "../shared/constants";
 
 const hotkeyBtn = document.getElementById("hotkey-btn") as HTMLButtonElement;
 const parentChainCheckbox = document.getElementById("parent-chain") as HTMLInputElement;
@@ -9,15 +9,83 @@ const depthValue = document.getElementById("depth-value") as HTMLSpanElement;
 const pageUrlCheckbox = document.getElementById("page-url") as HTMLInputElement;
 const previewText = document.getElementById("preview-text") as HTMLPreElement;
 
+const siteToggleContainer = document.getElementById("site-toggle") as HTMLDivElement;
+const siteEnabledCheckbox = document.getElementById("site-enabled") as HTMLInputElement;
+const siteToggleText = document.getElementById("site-toggle-text") as HTMLSpanElement;
+const siteHostnameEl = document.getElementById("site-hostname") as HTMLParagraphElement;
+
 let settings: PickerSettings = { ...DEFAULT_SETTINGS };
 let listening = false;
+let currentHostname = "";
 
-// Load current settings
-chrome.storage.sync.get(STORAGE_KEY, (result) => {
-  if (result[STORAGE_KEY]) {
-    settings = { ...DEFAULT_SETTINGS, ...result[STORAGE_KEY] };
+function isLocalhostHost(hostname: string): boolean {
+  return (LOCALHOST_HOSTS as readonly string[]).includes(hostname);
+}
+
+// Get the active tab's hostname
+async function getCurrentHostname(): Promise<string> {
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  if (!tab?.url) return "";
+  try {
+    return new URL(tab.url).hostname;
+  } catch {
+    return "";
   }
+}
+
+// Load current settings and hostname
+Promise.all([
+  new Promise<void>((resolve) => {
+    chrome.storage.sync.get(STORAGE_KEY, (result) => {
+      if (result[STORAGE_KEY]) {
+        settings = { ...DEFAULT_SETTINGS, ...result[STORAGE_KEY] };
+      }
+      resolve();
+    });
+  }),
+  getCurrentHostname(),
+]).then(([, hostname]) => {
+  currentHostname = hostname;
   renderSettings();
+  renderSiteToggle();
+});
+
+function renderSiteToggle(): void {
+  if (!currentHostname) {
+    siteToggleContainer.style.display = "none";
+    return;
+  }
+
+  siteToggleContainer.style.display = "block";
+  siteHostnameEl.textContent = currentHostname;
+
+  if (isLocalhostHost(currentHostname)) {
+    siteToggleContainer.classList.add("always-on");
+    siteEnabledCheckbox.checked = true;
+    siteEnabledCheckbox.disabled = true;
+    siteToggleText.textContent = "Always enabled";
+  } else {
+    siteToggleContainer.classList.remove("always-on");
+    const enabled = settings.allowedSites.includes(currentHostname);
+    siteEnabledCheckbox.checked = enabled;
+    siteEnabledCheckbox.disabled = false;
+    siteToggleText.textContent = enabled ? "Enabled on this site" : "Disabled on this site";
+  }
+}
+
+siteEnabledCheckbox.addEventListener("change", () => {
+  if (isLocalhostHost(currentHostname)) return;
+
+  if (siteEnabledCheckbox.checked) {
+    if (!settings.allowedSites.includes(currentHostname)) {
+      settings.allowedSites = [...settings.allowedSites, currentHostname];
+    }
+  } else {
+    settings.allowedSites = settings.allowedSites.filter((h) => h !== currentHostname);
+  }
+
+  renderSiteToggle();
+  saveSettings();
 });
 
 function renderSettings(): void {

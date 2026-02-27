@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "React Component Picker",
+  "name": "React Element Selector",
   "version": "1.0.0",
-  "description": "Hold a hotkey, hover to highlight React components, click to copy component name + source path.",
+  "description": "Hold a hotkey, hover to inspect React components, click to copy component name + source location.",
   "permissions": ["storage", "clipboardWrite"],
   "background": {
     "service_worker": "dist/service-worker.js"

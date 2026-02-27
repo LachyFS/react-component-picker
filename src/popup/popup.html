@@ -3,12 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>React Component Picker</title>
+  <title>React Element Selector</title>
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
   <div class="container">
-    <h1>React Component Picker</h1>
+    <h1>React Element Selector</h1>
+
+    <div id="site-toggle" class="site-toggle">
+      <div class="site-toggle-row">
+        <label class="toggle-label" id="site-toggle-label">
+          <input type="checkbox" id="site-enabled">
+          <span id="site-toggle-text">Enabled on this site</span>
+        </label>
+      </div>
+      <p class="site-hostname" id="site-hostname"></p>
+    </div>
 
     <div class="field">
       <label for="hotkey-btn">Activation Hotkey</label>

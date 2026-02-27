@@ -64,6 +64,7 @@ export function updateOverlay(
   rect: { top: number; left: number; width: number; height: number } | null,
   components: ComponentInfo[],
   parentChainDepth: number,
+  props?: string | null,
 ): void {
   if (!overlayEl || !tooltipEl) return;
 
@@ -89,6 +90,10 @@ export function updateOverlay(
     html += `\n<span style="color:#888;font-size:11px">${escapeHtml(formatPath(primary.fileName))}`;
     if (primary.lineNumber) html += `:${primary.lineNumber}`;
     html += `</span>`;
+  }
+
+  if (props) {
+    html += `\n<span style="color:#999;font-size:11px">${escapeHtml(props)}</span>`;
   }
 
   if (parents.length > 0) {
