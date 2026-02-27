@@ -3,6 +3,10 @@ export interface ComponentInfo {
   fileName?: string;
   lineNumber?: number;
   columnNumber?: number;
+  ownerName?: string;
+  ownerFileName?: string;
+  ownerLineNumber?: number;
+  ownerColumnNumber?: number;
 }
 
 export interface PickerSettings {

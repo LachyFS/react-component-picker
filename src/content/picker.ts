@@ -139,13 +139,23 @@ function formatCopyText(components: ComponentInfo[], settings: PickerSettings, c
 }
 
 function formatComponent(comp: ComponentInfo): string {
-  if (!comp.fileName) return comp.name;
+  if (comp.fileName) {
+    const path = cleanPath(comp.fileName);
+    let result = `${comp.name} (${path}`;
+    if (comp.lineNumber) result += `:${comp.lineNumber}`;
+    result += `)`;
+    return result;
+  }
 
-  const path = cleanPath(comp.fileName);
-  let result = `${comp.name} (${path}`;
-  if (comp.lineNumber) result += `:${comp.lineNumber}`;
-  result += `)`;
-  return result;
+  if (comp.ownerFileName) {
+    const path = cleanPath(comp.ownerFileName);
+    let result = `${comp.name} [in ${comp.ownerName} @ ${path}`;
+    if (comp.ownerLineNumber) result += `:${comp.ownerLineNumber}`;
+    result += `]`;
+    return result;
+  }
+
+  return comp.name;
 }
 
 function cleanPath(filePath: string): string {

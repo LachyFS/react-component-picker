@@ -93,6 +93,10 @@ export function updateOverlay(
     html += `\n<span style="color:#888;font-size:11px">${escapeHtml(formatPath(primary.fileName))}`;
     if (primary.lineNumber) html += `:${primary.lineNumber}`;
     html += `</span>`;
+  } else if (primary.ownerFileName) {
+    html += `\n<span style="color:#888;font-size:11px">in <span style="color:#a0a0a0">${escapeHtml(primary.ownerName!)}</span>  ${escapeHtml(formatPath(primary.ownerFileName))}`;
+    if (primary.ownerLineNumber) html += `:${primary.ownerLineNumber}`;
+    html += `</span>`;
   }
 
   if (props) {
@@ -107,6 +111,10 @@ export function updateOverlay(
         html += ` <span style="color:#666">(${escapeHtml(formatPath(parent.fileName))}`;
         if (parent.lineNumber) html += `:${parent.lineNumber}`;
         html += `)</span>`;
+      } else if (parent.ownerFileName) {
+        html += ` <span style="color:#666">[in ${escapeHtml(parent.ownerName!)} @ ${escapeHtml(formatPath(parent.ownerFileName))}`;
+        if (parent.ownerLineNumber) html += `:${parent.ownerLineNumber}`;
+        html += `]</span>`;
       }
     }
     html += `</span>`;
@@ -145,6 +153,44 @@ export function flashCopyFeedback(): void {
     overlayEl.style.backgroundColor = "rgba(97, 218, 251, 0.1)";
     overlayEl.style.borderColor = "#61dafb";
   }, 200);
+
+  showCopyToast();
+}
+
+function showCopyToast(): void {
+  const toast = document.createElement("div");
+  toast.textContent = "Copied to clipboard";
+  Object.assign(toast.style, {
+    position: "fixed",
+    bottom: "24px",
+    left: "50%",
+    transform: "translateX(-50%) translateY(8px)",
+    backgroundColor: "#1a1a2e",
+    color: "#61dafb",
+    padding: "8px 16px",
+    borderRadius: "6px",
+    fontSize: "13px",
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+    fontWeight: "600",
+    zIndex: String(Z_INDEX),
+    pointerEvents: "none",
+    border: "1px solid rgba(97, 218, 251, 0.3)",
+    boxShadow: "0 4px 12px rgba(0,0,0,0.4)",
+    opacity: "0",
+    transition: "opacity 0.15s ease, transform 0.15s ease",
+  } satisfies Partial<CSSStyleDeclaration>);
+  document.documentElement.appendChild(toast);
+
+  requestAnimationFrame(() => {
+    toast.style.opacity = "1";
+    toast.style.transform = "translateX(-50%) translateY(0)";
+  });
+
+  setTimeout(() => {
+    toast.style.opacity = "0";
+    toast.style.transform = "translateX(-50%) translateY(8px)";
+    toast.addEventListener("transitionend", () => toast.remove(), { once: true });
+  }, 1200);
 }
 
 function formatPath(filePath: string): string {

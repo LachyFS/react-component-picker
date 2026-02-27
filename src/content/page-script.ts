@@ -78,7 +78,7 @@ function getSourceInfo(fiber: any): { fileName?: string; lineNumber?: number; co
 
   // React 19+: _debugOwnerStack (string stack trace)
   if (typeof fiber._debugOwnerStack === "string" && fiber._debugOwnerStack) {
-    const match = fiber._debugOwnerStack.match(/\(([^)]+):(\d+):(\d+)\)/);
+    const match = fiber._debugOwnerStack.match(/\((.+):(\d+):(\d+)\)/);
     if (match) {
       return {
         fileName: match[1],
@@ -89,6 +89,24 @@ function getSourceInfo(fiber: any): { fileName?: string; lineNumber?: number; co
   }
 
   return {};
+}
+
+function findNearestSourceOwner(fiber: any): { name: string; fileName: string; lineNumber?: number; columnNumber?: number } | null {
+  let current = fiber.return;
+  while (current) {
+    // Skip host elements (div, span, etc.) — we want user-defined components
+    if (current.type && typeof current.type !== "string") {
+      const name = getComponentName(current);
+      if (name) {
+        const source = getSourceInfo(current);
+        if (source.fileName) {
+          return { name, fileName: source.fileName, lineNumber: source.lineNumber, columnNumber: source.columnNumber };
+        }
+      }
+    }
+    current = current.return;
+  }
+  return null;
 }
 
 function collectComponents(element: Element, maxDepth: number): ComponentInfo[] {
@@ -102,12 +120,22 @@ function collectComponents(element: Element, maxDepth: number): ComponentInfo[] 
     if (name) {
       isFirst = false;
       const source = getSourceInfo(fiber);
-      components.push({
+      const info: ComponentInfo = {
         name,
         fileName: source.fileName,
         lineNumber: source.lineNumber,
         columnNumber: source.columnNumber,
-      });
+      };
+      if (!info.fileName) {
+        const owner = findNearestSourceOwner(fiber);
+        if (owner) {
+          info.ownerName = owner.name;
+          info.ownerFileName = owner.fileName;
+          info.ownerLineNumber = owner.lineNumber;
+          info.ownerColumnNumber = owner.columnNumber;
+        }
+      }
+      components.push(info);
     }
     fiber = fiber.return;
   }
