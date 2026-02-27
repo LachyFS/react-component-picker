@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>React Component Picker</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <h1>React Component Picker</h1>
+
+    <div class="field">
+      <label for="hotkey-btn">Activation Hotkey</label>
+      <button id="hotkey-btn" class="hotkey-btn">Alt</button>
+      <p class="hint">Click, then press a key to change</p>
+    </div>
+
+    <div class="field">
+      <label class="toggle-label">
+        <input type="checkbox" id="parent-chain" checked>
+        <span>Include parent chain</span>
+      </label>
+    </div>
+
+    <div class="field" id="depth-field">
+      <label for="depth-slider">Parent chain depth: <span id="depth-value">3</span></label>
+      <input type="range" id="depth-slider" min="1" max="10" value="3">
+    </div>
+
+    <div class="field">
+      <label class="toggle-label">
+        <input type="checkbox" id="page-url">
+        <span>Include page URL</span>
+      </label>
+    </div>
+
+    <div class="preview">
+      <p class="preview-label">Output preview:</p>
+      <pre id="preview-text">ComponentName (path/to/file.tsx:23)
+  in ParentComponent (path/to/Parent.tsx:45)
+  in GrandparentComponent (path/to/Grandparent.tsx:12)</pre>
+    </div>
+  </div>
+
+  <script src="../../dist/popup.js"></script>
+</body>
+</html>
