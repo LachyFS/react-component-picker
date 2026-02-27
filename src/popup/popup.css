@@ -23,6 +23,27 @@ h1 {
   margin-bottom: 16px;
   padding-bottom: 8px;
   border-bottom: 1px solid #333;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: #2a1a1a;
+  color: #f87171;
+  border: 1px solid #5c2020;
+}
+
+.status-badge.enabled {
+  background: #0d2a0d;
+  color: #6fbf6f;
+  border-color: #2a4a2a;
 }
 
 .site-toggle {

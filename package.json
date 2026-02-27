@@ -7,10 +7,10 @@
   "author": "Lachlan Forsyth-Smith",
   "repository": {
     "type": "git",
-    "url": "https://github.com/YOUR_USERNAME/react-component-picker.git"
+    "url": "https://github.com/lachyfs/react-component-picker.git"
   },
   "bugs": {
-    "url": "https://github.com/YOUR_USERNAME/react-component-picker/issues"
+    "url": "https://github.com/lachyfs/react-component-picker/issues"
   },
   "keywords": [
     "react",
@@ -21,6 +21,7 @@
   ],
   "scripts": {
     "build": "node esbuild.config.mjs",
+    "package": "pnpm build && rm -f react-component-picker.zip && zip -r react-component-picker.zip manifest.json dist/ icons/ src/popup/popup.html src/popup/popup.css",
     "watch": "node esbuild.config.mjs --watch",
     "typecheck": "tsc --noEmit",
     "release": "pnpm version patch && git push --follow-tags",

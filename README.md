@@ -1,6 +1,23 @@
+<div align="center">
+
 # React Component Picker
 
-A Chrome extension that lets you inspect React components on any page. Hold a hotkey, hover over elements to see their component name, source file, props, and parent chain — then click to copy it all to your clipboard.
+**Inspect any React component on the page. Hover, click, copy.**
+
+[![CI](https://github.com/lachyfs/react-component-picker/actions/workflows/ci.yml/badge.svg)](https://github.com/lachyfs/react-component-picker/actions/workflows/ci.yml)
+[![Release](https://github.com/lachyfs/react-component-picker/actions/workflows/release.yml/badge.svg)](https://github.com/lachyfs/react-component-picker/actions/workflows/release.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Chrome MV3](https://img.shields.io/badge/Chrome-MV3-4285F4?logo=googlechrome&logoColor=white)](manifest.json)
+[![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)](tsconfig.json)
+[![React 16–19](https://img.shields.io/badge/React-16--19-61DAFB?logo=react&logoColor=black)](https://react.dev)
+
+<br />
+
+Hold a hotkey, hover over elements to see their component name, source file, props, and parent chain — then click to copy it all to your clipboard.
+
+</div>
+
+---
 
 ## Features
 
@@ -19,7 +36,7 @@ A Chrome extension that lets you inspect React components on any page. Hold a ho
 
 ```bash
 # Clone the repo
-git clone https://github.com/YOUR_USERNAME/react-component-picker.git
+git clone https://github.com/lachyfs/react-component-picker.git
 cd react-component-picker
 
 # Install dependencies
@@ -117,4 +134,4 @@ Communication between the two worlds uses `window.postMessage`. The popup and ba
 
 ## License
 
-MIT
+MIT — see [LICENSE](LICENSE)

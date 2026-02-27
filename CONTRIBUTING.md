@@ -5,7 +5,7 @@ Thanks for your interest in contributing to React Component Picker!
 ## Getting started
 
 1. Fork the repository
-2. Clone your fork: `git clone https://github.com/YOUR_USERNAME/react-component-picker.git`
+2. Clone your fork: `git clone https://github.com/lachyfs/react-component-picker.git`
 3. Install dependencies: `pnpm install`
 4. Create a branch: `git checkout -b my-feature`
 5. Make your changes

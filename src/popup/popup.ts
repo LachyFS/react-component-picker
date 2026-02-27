@@ -13,6 +13,7 @@ const siteToggleContainer = document.getElementById("site-toggle") as HTMLDivEle
 const siteEnabledCheckbox = document.getElementById("site-enabled") as HTMLInputElement;
 const siteToggleText = document.getElementById("site-toggle-text") as HTMLSpanElement;
 const siteHostnameEl = document.getElementById("site-hostname") as HTMLParagraphElement;
+const statusBadge = document.getElementById("status-badge") as HTMLSpanElement;
 
 let settings: PickerSettings = { ...DEFAULT_SETTINGS };
 let listening = false;
@@ -50,9 +51,15 @@ Promise.all([
   renderSiteToggle();
 });
 
+function updateStatusBadge(enabled: boolean): void {
+  statusBadge.textContent = enabled ? "Enabled" : "Disabled";
+  statusBadge.classList.toggle("enabled", enabled);
+}
+
 function renderSiteToggle(): void {
   if (!currentHostname) {
     siteToggleContainer.style.display = "none";
+    updateStatusBadge(false);
     return;
   }
 
@@ -64,12 +71,14 @@ function renderSiteToggle(): void {
     siteEnabledCheckbox.checked = true;
     siteEnabledCheckbox.disabled = true;
     siteToggleText.textContent = "Always enabled";
+    updateStatusBadge(true);
   } else {
     siteToggleContainer.classList.remove("always-on");
     const enabled = settings.allowedSites.includes(currentHostname);
     siteEnabledCheckbox.checked = enabled;
     siteEnabledCheckbox.disabled = false;
     siteToggleText.textContent = enabled ? "Enabled on this site" : "Disabled on this site";
+    updateStatusBadge(enabled);
   }
 }
 
