@@ -3,9 +3,29 @@
   "version": "1.0.0",
   "description": "Chrome extension to pick React components and copy their names + source paths",
   "private": true,
+  "license": "MIT",
+  "author": "Lachlan Forsyth-Smith",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YOUR_USERNAME/react-component-picker.git"
+  },
+  "bugs": {
+    "url": "https://github.com/YOUR_USERNAME/react-component-picker/issues"
+  },
+  "keywords": [
+    "react",
+    "chrome-extension",
+    "devtools",
+    "component-picker",
+    "react-devtools"
+  ],
   "scripts": {
     "build": "node esbuild.config.mjs",
-    "watch": "node esbuild.config.mjs --watch"
+    "watch": "node esbuild.config.mjs --watch",
+    "typecheck": "tsc --noEmit",
+    "release": "pnpm version patch && git push --follow-tags",
+    "release:minor": "pnpm version minor && git push --follow-tags",
+    "release:major": "pnpm version major && git push --follow-tags"
   },
   "devDependencies": {
     "@types/chrome": "^0.0.287",

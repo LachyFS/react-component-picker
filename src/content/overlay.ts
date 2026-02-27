@@ -39,7 +39,10 @@ function createTooltip(): HTMLDivElement {
     fontFamily: "'SF Mono', 'Fira Code', 'Cascadia Code', monospace",
     lineHeight: "1.5",
     maxWidth: "500px",
-    whiteSpace: "pre",
+    whiteSpace: "pre-wrap",
+    overflowWrap: "break-word",
+    wordBreak: "break-all",
+    overflow: "hidden",
     boxShadow: "0 4px 12px rgba(0,0,0,0.4)",
     border: "1px solid rgba(97, 218, 251, 0.3)",
     display: "none",
@@ -93,7 +96,7 @@ export function updateOverlay(
   }
 
   if (props) {
-    html += `\n<span style="color:#999;font-size:11px">${escapeHtml(props)}</span>`;
+    html += `\n<span style="color:#999;font-size:11px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis;white-space:normal;word-break:break-all">${escapeHtml(props)}</span>`;
   }
 
   if (parents.length > 0) {
